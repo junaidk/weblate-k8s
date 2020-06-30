@@ -1,0 +1,57 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: redis
+  name: redis
+  namespace: weblate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:4-alpine
+        imagePullPolicy: IfNotPresent
+        command: ["redis-server"]
+        args: ["--appendonly", "yes"]       
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 6379
+          timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 6379
+          timeoutSeconds: 1          
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /data
+          name: redis-storage  
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always           
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis  

@@ -1,0 +1,75 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: weblate
+  name: weblate
+  namespace: weblate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weblate
+  template:
+    metadata:
+      labels:
+        app: weblate
+    spec:
+      initContainers:
+      - name: take-data-dir-ownership
+        image: alpine:3.6
+        command:
+        - chown
+        - -R  
+        - 1000:1000
+        - /app/data
+        volumeMounts:
+        - mountPath: /app/data
+          name: weblate-storage   
+      containers:
+      - name: weblate
+        image: weblate/weblate
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgress-secret
+              key: username
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgress-secret
+              key: password           
+        - name: POSTGRES_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: postgress-secret
+              key: database
+
+        envFrom:
+        - configMapRef:
+            name: weblate-config   
+        - secretRef:
+            name: weblate-secret                                                                                          
+        ports:
+        - containerPort: 8080
+          protocol: TCP        
+
+        # resources:
+        #   limits:
+        #     cpu: 5000m
+        #     memory: 256Mi
+        #   requests:
+        #     cpu: 250m
+        #     memory: 128Mi          
+        volumeMounts:
+        - mountPath: /app/data
+          name: weblate-storage  
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always           
+      volumes:
+        - name: weblate-storage
+          persistentVolumeClaim:
+            claimName: weblate  

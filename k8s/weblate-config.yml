@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: weblate-config
+  namespace: weblate
+data:
+  WEBLATE_DEBUG: "1"
+  WEBLATE_LOGLEVEL: DEBUG
+  WEBLATE_SITE_TITLE: Weblate
+  WEBLATE_SERVER_EMAIL: weblate@example.com
+  WEBLATE_DEFAULT_FROM_EMAIL: weblate@example.com
+  WEBLATE_ALLOWED_HOSTS: '*'
+  WEBLATE_REGISTRATION_OPEN: "1"
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  POSTGRES_HOST: postgress
+  POSTGRES_PORT: "5432"
+
+
+

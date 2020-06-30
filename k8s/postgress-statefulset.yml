@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: weblate
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:11-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgress-secret
+              key: username
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgress-secret
+              key: password           
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgress-secret
+              key: database                                                  
+        ports:
+        - containerPort: 5432
+          name: postgredb
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 5432
+          timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 5432
+          timeoutSeconds: 1   
+        resources:
+          limits:
+            cpu: 125m
+            memory: 256Mi
+          requests:
+            cpu: 70m
+            memory: 200Mi                  
+        volumeMounts:
+        - name: postgredb
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+  volumeClaimTemplates:
+  - metadata:
+      name: postgredb
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi

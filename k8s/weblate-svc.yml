@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weblate
+  namespace: weblate
+spec:
+  ports:
+  - name: weblate-80
+    port: 8080
+    protocol: TCP
+    targetPort: 8080    
+  selector:
+    app: weblate
+
