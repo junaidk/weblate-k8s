@@ -2,6 +2,10 @@
 K8s manifests for [Weblate](https://weblate.org/en/)
 
 
+## infrastructure
+cd to `terraform` director
+and run `terraform apply -var="project_id=<gcp project_id>"`
+
 ## GKE
 - download service-account json and place it in terraform directory.
 - replace `credentials` paramter with service-account json file name. 
@@ -12,6 +16,3 @@ K8s manifests for [Weblate](https://weblate.org/en/)
 ## deploy
 - run `deploy-services.sh` to deploy the application (chane KUBECONFIG variable if needed)
 
-## infrastructure
-cd to `terraform` director
-and run `terraform apply -var="project_id=<gcp project_id>"`
