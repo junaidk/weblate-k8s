@@ -3,18 +3,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: weblate
-  name: weblate
+    app: weblate-blue
+  name: weblate-blue
   namespace: weblate
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
-      app: weblate
+      app: weblate-blue
   template:
     metadata:
       labels:
-        app: weblate
+        app: weblate-blue
     spec:
       initContainers:
       - name: take-data-dir-ownership
@@ -29,7 +29,7 @@ spec:
           name: weblate-storage   
       containers:
       - name: weblate
-        image: weblate/weblate
+        image: weblate/weblate:4.1-2
         imagePullPolicy: IfNotPresent
         env:
         - name: POSTGRES_PASSWORD

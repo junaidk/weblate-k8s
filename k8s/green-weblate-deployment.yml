@@ -3,18 +3,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: weblate
-  name: weblate
+    app: weblate-green
+  name: weblate-green
   namespace: weblate
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
-      app: weblate
+      app: weblate-green
   template:
     metadata:
       labels:
-        app: weblate
+        app: weblate-green
     spec:
       initContainers:
       - name: take-data-dir-ownership
