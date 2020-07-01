@@ -10,5 +10,6 @@ spec:
     protocol: TCP
     targetPort: 8080    
   selector:
-    app: weblate-green
+    app: weblate
+    version: green
 

@@ -7,14 +7,16 @@ metadata:
   name: weblate-green
   namespace: weblate
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
-      app: weblate-green
+      app: weblate
+      version: green
   template:
     metadata:
       labels:
-        app: weblate-green
+        app: weblate
+        version: green
     spec:
       initContainers:
       - name: take-data-dir-ownership

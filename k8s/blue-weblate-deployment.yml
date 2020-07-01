@@ -10,11 +10,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: weblate-blue
+      app: weblate
+      version: blue
   template:
     metadata:
       labels:
-        app: weblate-blue
+        app: weblate
+        version: blue
     spec:
       initContainers:
       - name: take-data-dir-ownership
