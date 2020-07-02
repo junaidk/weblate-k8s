@@ -20,7 +20,7 @@ echo Old Version is $OLD_VERSION
 
 kubectl -n $NAMESPACE scale deployment/$SERVICE_NAME-$OLD_VERSION --replicas=1
 
-kubectl -n $NAMESPACE rollout status deployment/$SERVICE_NAME-$OLD_VERSION 
+kubectl -n $NAMESPACE rollout status deployment/$SERVICE_NAME-$OLD_VERSION --timeout=20s
 
 kubectl -n $NAMESPACE patch service $SERVICE_NAME -p '{"spec":{"selector":{"version": "'$OLD_VERSION'"}}}'
 
