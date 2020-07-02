@@ -3,7 +3,7 @@
 NAMESPACE=weblate
 SERVICE_NAME=weblate
 
-IMAGE=weblate/weblate:4.1.1-1
+IMAGE=weblate/weblate:4.1-2
 
 BLUE="blue"
 GREEN="green"
@@ -78,10 +78,23 @@ echo New Version is $NEW_VERSION
 kubectl -n $NAMESPACE set image deployment/$SERVICE_NAME-$NEW_VERSION $SERVICE_NAME=$IMAGE 
 kubectl -n $NAMESPACE scale deployment/$SERVICE_NAME-$NEW_VERSION --replicas=1
 
-kubectl -n $NAMESPACE rollout status deployment/$SERVICE_NAME-$NEW_VERSION 
+kubectl -n $NAMESPACE rollout status deployment/$SERVICE_NAME-$NEW_VERSION --timeout=20s
+
+if [[ "$?" > "0" ]]  ; then
+  echo "error occured while rolling out $SERVICE_NAME-$NEW_VERSION"
+  exit
+fi
 
 healthCheck
 
 kubectl -n $NAMESPACE patch service $SERVICE_NAME -p '{"spec":{"selector":{"version": "'$NEW_VERSION'"}}}'
+
+echo "Do you wish to keep $SERVICE_NAME-$CURRENT_VERSION running? Type 1 or 2"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) exit;;
+        No ) break;;
+    esac
+done
 
 kubectl -n $NAMESPACE scale deployment/$SERVICE_NAME-$CURRENT_VERSION --replicas=0

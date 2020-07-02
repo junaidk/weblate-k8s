@@ -5,7 +5,11 @@ Blue/Green deloyment script.
 
 ## Infrastructure
 cd to `terraform` directory
-and run `terraform apply -var="project_id=<gcp project_id>"`
+first run `terraform init`
+and then run `terraform apply -var="project_id=<gcp project_id>"`
+
+in order to destroy infrastructure
+`terraform destroy -var="project_id=<gcp project_id>"`
 
 ## GKE
 - download service-account json and place it in terraform directory.
