@@ -1,20 +1,24 @@
 ## Intro
 K8s manifests for [Weblate](https://weblate.org/en/)
+
 Terraform manifests for starting gke cluster.
+
 Blue/Green deloyment script.
 
 ## GKE
-download service-account json and place it in terraform directory.
+Download service-account json and place it in terraform directory.
 
-replace `credentials` paramter with service-account json file name. 
+Replace `credentials` paramter with service-account json file name in `main.tf` file. 
 
-set up gcloud cli
+Set up gcloud cli
 
-login using `gcloud auth login`
+Login using `gcloud auth login`
 
 ## Infrastructure
 cd to `terraform` directory
+
 first run `terraform init`
+
 and then run `terraform apply -var="project_id=<gcp project_id>"`
 
 in order to destroy infrastructure
@@ -28,6 +32,7 @@ After cluster is started, download kubeconfig by running `get-credentials.sh`
 
 ## Update
 Update image tag in bg-auto.sh
+
 Then run `./bg-auto.sh` to start deployment process.
 
 To revert back to previous version run `./bg-revert.sh`
